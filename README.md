@@ -1,6 +1,6 @@
 # gke-notification-handler
 
-A Cloud Function that will parse GKE cluster upgrade notifications and send them to Slack.
+A Cloud Function that will parse GKE cluster upgrade notifications (and upgrade available notifications) and send them to Slack.
 
 This is a Python script meant to run in a GCP Cloud Function.
 
@@ -10,9 +10,8 @@ The two files here `main.py` and `requirements.txt` can be compiled into a `zip`
 
 You'll need a Slack application with an incoming webhook token that has permission to post in whichever channel you'd like to receive these notifications. This must be passed in via the environment variable `SLACK_WEBHOOK_URL`.
 
-You'll also need to
-
 You're free to tweak this as needed to make it work for your use case.
+
 ## Dependencies and Examples
 
 - You must have a Pub/Sub topic available to handle notifications from a given GKE cluster:
