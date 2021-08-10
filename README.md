@@ -8,9 +8,14 @@ The two files here `main.py` and `requirements.txt` can be compiled into a `zip`
 
 ## Setup
 
-You'll need a Slack application with an incoming webhook token that has permission to post in whichever channel you'd like to receive these notifications. This must be passed in via the environment variable `SLACK_WEBHOOK_URL`.
+You'll need a Slack application with an incoming webhook token that has permission to post in whichever channel you'd like to receive these notifications.
 
 You're free to tweak this as needed to make it work for your use case.
+
+## Environment Variables
+
+- `SEND_UPGRADE_AVAILABLE_NOTIFICATIONS` - if set to `enabled`, notifications will be sent regarding `UpgradeAvailableEvent` types. This can be verbose and annoying, so it is configurable.
+- `SLACK_WEBHOOK_URL` - should contain the webhook for sending to Slack.
 
 ## Dependencies and Examples
 
