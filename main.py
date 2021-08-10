@@ -1,3 +1,15 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# =============================================================================
+# Created By  : github.com/echoboomer
+# =============================================================================
+"""
+This script processes GKE cluster upgrade-related notifications as part of a
+GCP Cloud Function.
+"""
+# =============================================================================
+# Imports
+# =============================================================================
 import base64
 import json
 import os
@@ -67,9 +79,21 @@ def notify_slack(event, context):
                         "color": "#9733EE",
                         "fields": [
                             {"title": title},
-                            {"title": "Project", "value": project, "short": "false"},
-                            {"title": "Cluster", "value": cluster, "short": "false"},
-                            {"title": "Location", "value": location, "short": "false"},
+                            {
+                                "title": "Project",
+                                "value": project,
+                                "short": "false",
+                            },
+                            {
+                                "title": "Cluster",
+                                "value": cluster,
+                                "short": "false",
+                            },
+                            {
+                                "title": "Location",
+                                "value": location,
+                                "short": "false",
+                            },
                             {
                                 "title": "Update Type",
                                 "value": cluster_resource,
@@ -90,7 +114,11 @@ def notify_slack(event, context):
                                 "value": start_time,
                                 "short": "false",
                             },
-                            {"title": "Details", "value": message, "short": "false"},
+                            {
+                                "title": "Details",
+                                "value": message,
+                                "short": "false",
+                            },
                         ],
                     }
                 ],
@@ -98,36 +126,57 @@ def notify_slack(event, context):
             process_event(slack_data, webhook_url)
         # UpgradeAvailableEvent
         elif "UpgradeAvailableEvent" in event["attributes"]["type_url"]:
-            # UpgradeAvailableEvent Variables
-            available_version = json.loads(event["attributes"]["payload"])["version"]
-            title = f"GKE Cluster Upgrade Available Notification :zap:"
-            slack_data = {
-                "username": "Platform Notifications",
-                "icon_emoji": ":satellite:",
-                "attachments": [
-                    {
-                        "color": "#9733EE",
-                        "fields": [
-                            {"title": title},
-                            {"title": "Project", "value": project, "short": "false"},
-                            {"title": "Cluster", "value": cluster, "short": "false"},
-                            {"title": "Location", "value": location, "short": "false"},
-                            {
-                                "title": "Eligible Resource",
-                                "value": cluster_resource,
-                                "short": "false",
-                            },
-                            {
-                                "title": "Eligible Version",
-                                "value": available_version,
-                                "short": "false",
-                            },
-                            {"title": "Details", "value": message, "short": "false"},
-                        ],
-                    }
-                ],
-            }
-            process_event(slack_data, webhook_url)
+            if os.Getenv("SEND_UPGRADE_AVAILABLE_NOTIFICATIONS") == "enabled":
+                # UpgradeAvailableEvent Variables
+                available_version = json.loads(event["attributes"]["payload"])[
+                    "version"
+                ]
+                title = f"GKE Cluster Upgrade Available Notification :zap:"
+                slack_data = {
+                    "username": "Platform Notifications",
+                    "icon_emoji": ":satellite:",
+                    "attachments": [
+                        {
+                            "color": "#9733EE",
+                            "fields": [
+                                {"title": title},
+                                {
+                                    "title": "Project",
+                                    "value": project,
+                                    "short": "false",
+                                },
+                                {
+                                    "title": "Cluster",
+                                    "value": cluster,
+                                    "short": "false",
+                                },
+                                {
+                                    "title": "Location",
+                                    "value": location,
+                                    "short": "false",
+                                },
+                                {
+                                    "title": "Eligible Resource",
+                                    "value": cluster_resource,
+                                    "short": "false",
+                                },
+                                {
+                                    "title": "Eligible Version",
+                                    "value": available_version,
+                                    "short": "false",
+                                },
+                                {
+                                    "title": "Details",
+                                    "value": message,
+                                    "short": "false",
+                                },
+                            ],
+                        }
+                    ],
+                }
+                process_event(slack_data, webhook_url)
+            else:
+                pass
         else:
             print(
                 "Event was neither UpgradeEvent or UpgradeAvailableEvent, so it will be skipped."
