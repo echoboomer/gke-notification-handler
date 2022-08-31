@@ -126,7 +126,7 @@ def notify_slack(event, context):
             process_event(slack_data, webhook_url)
         # UpgradeAvailableEvent
         elif "UpgradeAvailableEvent" in event["attributes"]["type_url"]:
-            if os.Getenv("SEND_UPGRADE_AVAILABLE_NOTIFICATIONS") == "enabled":
+            if os.getenv("SEND_UPGRADE_AVAILABLE_NOTIFICATIONS") == "enabled":
                 # UpgradeAvailableEvent Variables
                 available_version = json.loads(event["attributes"]["payload"])[
                     "version"
